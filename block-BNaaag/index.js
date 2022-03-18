@@ -1,9 +1,14 @@
-const fs = require('fs');
+const { readFile, readFileSync } = require('fs');
 
-console.log('execute me first');
-
-fs.readFile('./file.md', 'utf8', (err, content) => {
+readFile('./content.md', 'utf8', (err, content) => {
   console.log(content);
 });
 
-console.log('number 3');
+const results = readFileSync('./content.md', 'utf8');
+
+console.log(results);
+
+const buff1 = Buffer.alloc(10);
+buff1.write('Welcome to Buffer');
+
+console.log(buff1);
