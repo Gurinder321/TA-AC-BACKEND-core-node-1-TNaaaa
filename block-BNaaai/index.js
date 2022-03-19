@@ -5,3 +5,5 @@ const parsedUrl = url.parse(
   true
 );
 console.log(parsedUrl);
+console.log(parsedUrl.pathname, parsedUrl.query);
+console.log(parsedUrl.host, parsedUrl.protocol);
