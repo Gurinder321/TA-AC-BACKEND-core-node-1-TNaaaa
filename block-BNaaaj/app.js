@@ -1,3 +1,5 @@
 const area = require('./area.js');
 
-console.log(circle(2));
+const circleArea = area.circle(10);
+
+console.log(circleArea);
