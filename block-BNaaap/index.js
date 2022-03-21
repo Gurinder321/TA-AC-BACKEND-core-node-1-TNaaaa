@@ -3,7 +3,10 @@ const http = require('http');
 const server = http.createServer(handleRequest);
 
 function handleRequest(req, res) {
-  res.writeHead(201, { 'Content-Type': 'text/html' });
+  console.log(req.method);
+  res.statusCode = 201;
+  res.setHeader('Content-Type', 'text/html');
+  //   res.writeHead(201, { 'Content-Type': 'text/html' });
   res.end('<h1>Welcome to zë lair!</h1>');
 }
 
