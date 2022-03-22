@@ -10,15 +10,13 @@ Q. Create a basic server using http's createServer
 ```js
 const http = require('http');
 
-const server = http.createServer(handleServer);
+const server = http.createServer(handleRequest);
 
 function handleRequest(req, res) {
-  res.end('Welcome');
+  console.log(req, res);
 }
 
-server.listen(5000, () => {
-  console.log('Server listening on port 5000');
-});
+server.listen(5000);
 ```
 
 Q. create a node server
@@ -29,15 +27,13 @@ Q. create a node server
 ```js
 const http = require('http');
 
-const server = http.createServer(handleServer);
+const server = http.createServer(handleRequest);
 
 function handleRequest(req, res) {
-  res.end('My first server in NodeJS');
+  res.end('My first server NodeJS');
 }
 
-server.listen(5000, () => {
-  console.log('Server listening on port 5000');
-});
+server.listen(5100);
 ```
 
 Q. write code to create a node server
@@ -49,24 +45,14 @@ Q. write code to create a node server
 ```js
 const http = require('http');
 
-const server = http.createServer(handleServer);
+const server = http.createServer(handleRequest);
 
 function handleRequest(req, res) {
-  res.setHeader('Content-type', 'text/html');
   console.log(req.headers);
-  fs.readFile('./node.html', (err, content) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(content);
-      res.end(content);
-    }
-  });
+  res.end(req.headers['user-agent']);
 }
 
-server.listen(5555, () => {
-  console.log('Server listening on port 5555');
-});
+server.listen(5555);
 ```
 
 Q. write code to create a node server
@@ -77,18 +63,16 @@ Q. write code to create a node server
 
 ```js
 const http = require('http');
+const url = require('url');
 
-const server = http.createServer(handleServer);
+const server = http.createServer(handleRequest);
 
 function handleRequest(req, res) {
-  res.setHeader('Content-type', 'text/html');
-  console.log(req.url, req.method);
-  return response.text().then((text) => {});
+  console.log(req.url, url.method);
+  res.end(req.method + req.url);
 }
 
-server.listen(5566, () => {
-  console.log('Server listening on port 5566');
-});
+server.listen(5566);
 ```
 
 Q. write code to create a node server
@@ -100,11 +84,10 @@ Q. write code to create a node server
 ```js
 const http = require('http');
 
-const server = http.createServer(handleServer);
+const server = http.createServer(handleRequest);
 
 function handleRequest(req, res) {
-  res.setHeader('Content-type', 'text/html');
-  res.end();
+  res.end(JSON.stringify(req.headers));
 }
 
 server.listen(7000, () => {
@@ -141,8 +124,8 @@ Q. create a server
 
 ```js
 const http = require('http');
-
-const server = http.createServer(handleServer);
+const PORT = 8000;
+const server = http.createServer(handleRequest);
 
 function handleRequest(req, res) {
   res.setHeader('Content-type', 'text/html');
@@ -150,8 +133,8 @@ function handleRequest(req, res) {
   res.end(`<h3>Welcome to altcampus</h3>`);
 }
 
-server.listen(8000, () => {
-  console.log('Server listening on port 8000');
+server.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
 ```
 
@@ -159,18 +142,17 @@ Q. Repeat above question using `res.writeHead` to set status code and Content-Ty
 
 ```js
 const http = require('http');
-
-const server = http.createServer(handleServer);
+const PORT = 8000;
+const server = http.createServer(handleRequest);
 
 function handleRequest(req, res) {
-  response.writeHead(200, {
-    'Content-Length': Buffer.byteLength(body),
-    'Content-Type': 'text/plain',
-  });
+  res.writeHead(201, { 'Content-type': 'text/html' });
+
+  res.end(`<h3>Welcome to altcampus</h3>`);
 }
 
-server.listen(8000, () => {
-  console.log('Server listening on port 8000');
+server.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
 ```
 
@@ -182,18 +164,18 @@ Q. create a basic node server
 
 ```js
 const http = require('http');
-
-const server = http.createServer(handleServer);
+const PORT = 8888;
+const server = http.createServer(handleRequest);
 
 function handleRequest(req, res) {
-  response.writeHead(200, {
+  res.writeHead(201, {
     'Content-Type': 'application/json',
   });
-  res.end({ success: true, message: 'Welcome to Nodejs' });
+  res.end(JSON.stringify({ success: true, message: 'Welcome to Nodejs' }));
 }
 
-server.listen(8888, () => {
-  console.log('Server listening on port 8888');
+server.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
 ```
 
@@ -206,22 +188,20 @@ Q. create a server
 
 ```js
 const http = require('http');
-
-
+const PORT = 2345;
 const server = http.createServer(handleRequest);
 
 function handleRequest(req, res) {
-  if (req.method === 'POST' && req.url === '/') {
-    res.setHeader('Content-type', 'text/html');
-    console.log(req.method)
-    res.end(`<h2>posted for first time</h2>`)
-
+  console.log(req.method);
+  res.writeHead(201, {
+    'Content-Type': 'text/html',
+  });
+  res.end(`<h2>posted for first time</h2>`);
 }
 
-server.listen(5555, () => {
-  console.log('Server listening on port 5555');
+server.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
-
 ```
 
 Q. create a server and handle 2 different requests
@@ -233,30 +213,25 @@ Q. create a server and handle 2 different requests
 
 ```js
 const http = require('http');
-const fs = require('fs');
-
+const PORT = 2345;
 const server = http.createServer(handleRequest);
 
 function handleRequest(req, res) {
-  if (req.method === 'GET' && req.url === '/') {
-    res.setHeader('Content-type', 'text/html');
-    fs.readFile('./node.html', (err, content) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(content);
-        res.end(content);
-      }
-    });
+  if (req.method === 'POST' && req.url === '/users') {
+    res.setHeader('Content-type', 'text/plain');
+    res.end('Gurinder');
   }
-  if (req.method === 'GET' && req.url === '/about') {
+  if (req.method === 'GET' && req.url === '/users') {
     res.setHeader('Content-type', 'text/html');
-    fs.createReadStream('./about.html').pipe(res);
+    res.end('<h2>Gurinder</h2>');
+  } else {
+    res.statusCode = 404;
+    res.end('Page Not Found');
   }
 }
 
-server.listen(2345, () => {
-  console.log('Server listening on port 2345');
+server.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
 ```
 
@@ -265,36 +240,21 @@ Q. Handle 2 requests on same route with different method 1. GET on '/users' rout
 ```js
 const http = require('http');
 const fs = require('fs');
-
+const PORT = 2345;
 const server = http.createServer(handleRequest);
 
 function handleRequest(req, res) {
   if (req.method === 'GET' && req.url === '/users') {
     res.setHeader('Content-type', 'text/html');
-    fs.readFile('./user.html', (err, content) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(content);
-        res.end(content);
-      }
-    });
+    fs.createReadStream('./form.html').pipe(res);
   }
-  if (req.method === 'POST' && req.url === '/') {
-    res.setHeader('Content-type', 'text/html');
-    fs.readFile('./user.html', (err, content) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log('Posted for the second time');
-        res.end(content);
-      }
-    });
+  if (req.method === 'POST' && req.url === '/users') {
+    res.end('Posted for the second time');
   }
 }
 
-server.listen(2345, () => {
-  console.log('Server listening on port 2345');
+server.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
 ```
 
@@ -306,3 +266,25 @@ Q. create a server and handle query params from the request on following url i.e
 - differentiate between `req.url` and `parsedUrl.pathname`
 - grab the email from query params
 - return json response with email from query params
+
+FIXME: Not working
+
+```js
+const http = require('http');
+const fs = require('fs');
+const url = require('url');
+const PORT = 2345;
+const server = http.createServer(handleRequest);
+
+function handleRequest(req, res) {
+  const parsedUrl = url.parse(req.url, true);
+  console.log(parsedUrl.pathname, req.url);
+
+  res.setHeader(('Content-Type', 'application/json'));
+  res.end(JSON.stringify(parsedUrl.query));
+}
+
+server.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
+```
